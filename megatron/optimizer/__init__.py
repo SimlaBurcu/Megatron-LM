@@ -20,6 +20,7 @@ from megatron.model import import_layernorm
 
 from .grad_scaler import ConstantGradScaler, DynamicGradScaler
 from .optimizer import FP16OptimizerWithFP16Params, FP32Optimizer
+from megatron.bfp.bfp_optim import get_bfp_optim
 
 
 def _get_params_for_weight_decay_optimization(module):
