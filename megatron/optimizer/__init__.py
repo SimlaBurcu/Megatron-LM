@@ -52,11 +52,16 @@ def get_megatron_optimizer(model):
 
     # Base optimizer.
     param_groups = _get_params_for_weight_decay_optimization(model)
-    optimizer = Adam(param_groups,
-                     lr=args.lr,
-                     weight_decay=args.weight_decay,
-                     betas=(args.adam_beta1, args.adam_beta2),
-                     eps=args.adam_eps)
+
+    AdamBFP = get_bfp_optim(Adam, "Adam")
+    optimizer = AdamBFP(
+        param_groups,
+        lr=args.lr, weight_decay=args.weight_decay,
+        betas=(args.adam_beta1, args.adam_beta2),
+        eps=args.adam_eps,
+        num_format=args.hbfp_num_format,
+        mant_bits=args.hbfp_mant_bits,
+        weight_mant_bits=args.hbfp_weight_mant_bits)
 
     if args.fp16:
         # Constant loss scale.

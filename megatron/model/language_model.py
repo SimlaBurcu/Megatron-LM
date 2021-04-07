@@ -24,18 +24,23 @@ from .module import MegatronModule
 from megatron.model.transformer import ParallelTransformer
 from megatron.model.utils import get_linear_layer
 from megatron.model.utils import init_method_normal, scaled_init_method_normal
-from megatron.bfp.bfp_ops import _get_bfp_op
+from megatron.bfp.bfp_ops import F_linear_bfp
 
 def parallel_lm_logits(input_, word_embeddings_weight, parallel_output,
                        bias=None):
     """LM logits using word embedding weights."""
     # Parallel logits.
     input_parallel = mpu.copy_to_tensor_model_parallel_region(input_)
+    args = get_args()
+    linear = F_linear_bfp(
+        num_format=args.hbfp_num_format,
+        mant_bits=args.hbfp_mant_bits,
+        weight_mant_bits=args.hbfp_weight_mant_bits)
     # Matrix multiply.
     if bias is None:
-        logits_parallel = F.linear(input_parallel, word_embeddings_weight)
+        logits_parallel = linear(input_parallel, word_embeddings_weight)
     else:
-        logits_parallel = F.linear(input_parallel, word_embeddings_weight, bias)
+        logits_parallel = linear(input_parallel, word_embeddings_weight) + bias
     # Gather if needed.
     if parallel_output:
         return logits_parallel

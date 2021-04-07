@@ -239,6 +239,7 @@ def unpack_bfp_args(kwargs):
                 ('weight_mant_bits', 0),
                 ('device', 'gpu')]
 
+    bfp_argn['device'] = torch.cuda.current_device()
     for arg, default in bfp_argn:
         if arg in kwargs:
             bfp_args[arg] = kwargs[arg]
