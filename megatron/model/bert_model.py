@@ -82,7 +82,7 @@ class BertLMHead(MegatronModule):
         self.bias.stride = 1
         self.parallel_output = parallel_output
 
-        self.dense = get_linear_layer(hidden_size, hidden_size, init_method)
+        self.dense = get_linear_layer(hidden_size, hidden_size, init_method, args)
         LayerNorm = import_layernorm(args.fp32_residual_connection)
         self.layernorm = LayerNorm(hidden_size, eps=layernorm_epsilon)
         self.gelu = torch.nn.functional.gelu
@@ -159,7 +159,7 @@ class BertModelBase(MegatronModule):
             self.binary_head = None
             if self.add_binary_head:
                 self.binary_head = get_linear_layer(args.hidden_size, 2,
-                                                    init_method)
+                                                    init_method, args)
                 self._binary_head_key = 'binary_head'
 
     def forward(self, bert_model_input, attention_mask,

@@ -49,7 +49,8 @@ class ClassificationBase(MegatronModule):
             self.classification_dropout = torch.nn.Dropout(args.hidden_dropout)
             self.classification_head = get_linear_layer(args.hidden_size,
                                                         self.num_classes,
-                                                        init_method)
+                                                        init_method,
+                                                    args)
             self._classification_head_key = 'classification_head'
 
     def forward(self, model_input, attention_mask, tokentype_ids=None):

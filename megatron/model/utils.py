@@ -20,6 +20,7 @@ import math
 import torch
 
 from megatron import get_args
+from megatron.bfp.bfp_ops import BFPLinear
 
 def init_method_normal(sigma):
     """Init method based on N(0, sigma)."""
@@ -39,9 +40,11 @@ def scaled_init_method_normal(sigma, num_layers):
     return init_
 
 
-def get_linear_layer(rows, columns, init_method):
+def get_linear_layer(rows, columns, init_method, args):
     """Simple linear layer with weight initialization."""
-    layer = torch.nn.Linear(rows, columns)
+    layer = BFPLinear(rows, columns, num_format=args.hbfp_num_format,
+                  mant_bits=args.hbfp_mant_bits,
+                  weight_mant_bits=args.hbfp_weight_mant_bits)
     init_method(layer.weight)
     with torch.no_grad():
         layer.bias.zero_()

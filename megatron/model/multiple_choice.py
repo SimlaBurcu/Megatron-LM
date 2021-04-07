@@ -47,7 +47,7 @@ class MultipleChoiceBase(MegatronModule):
         if mpu.is_pipeline_last_stage():
             self.multichoice_dropout = torch.nn.Dropout(args.hidden_dropout)
             self.multichoice_head = get_linear_layer(args.hidden_size, 1,
-                                                     init_method)
+                                                     init_method, args)
             self._multichoice_head_key = 'multichoice_head'
 
     def forward(self, model_input, attention_mask, tokentype_ids=None):

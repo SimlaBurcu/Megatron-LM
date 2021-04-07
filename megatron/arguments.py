@@ -27,6 +27,7 @@ def parse_args(extra_args_provider=None, defaults={},
     parser = argparse.ArgumentParser(description='Megatron-LM Arguments',
                                      allow_abbrev=False)
 
+    parse  = _add_hbfp_args(parser)
     # Standard arguments.
     parser = _add_network_size_args(parser)
     parser = _add_regularization_args(parser)
@@ -606,4 +607,16 @@ def _add_realm_args(parser):
                        help='How large of batches to use when doing indexing jobs')
     group.add_argument('--indexer-log-interval', type=int, default=1000,
                        help='After how many batches should the indexer report progress')
+    return parser
+
+
+def _add_hbfp_args(parser):
+    group = parser.add_argument_group(title='hbfp')
+
+    parser.add_argument('--hbfp_num_format', default='fp32', type=str,
+                        help='number format for fully connected and convolutional layers')
+    parser.add_argument('--hbfp_mant_bits', default=8, type=int,
+                        help='Mantissa bits for bfp')
+    parser.add_argument('--hbfp_weight_mant_bits', default=0, type=int,
+                        help='Mantissa bits for weights bfp')
     return parser

@@ -24,6 +24,7 @@ from .module import MegatronModule
 from megatron.model.transformer import ParallelTransformer
 from megatron.model.utils import get_linear_layer
 from megatron.model.utils import init_method_normal, scaled_init_method_normal
+from megatron.bfp.bfp_ops import _get_bfp_op
 
 def parallel_lm_logits(input_, word_embeddings_weight, parallel_output,
                        bias=None):
@@ -92,7 +93,8 @@ class Pooler(MegatronModule):
 
     def __init__(self, hidden_size, init_method):
         super(Pooler, self).__init__()
-        self.dense = get_linear_layer(hidden_size, hidden_size, init_method)
+        args = get_args()
+        self.dense = get_linear_layer(hidden_size, hidden_size, init_method, args)
 
     def forward(self, hidden_states, sequence_index=0):
         # hidden_states: [b, s, h]
@@ -302,7 +304,7 @@ class TransformerLanguageModelBase(MegatronModule):
 
         # Transformer.
         self.transformer = ParallelTransformer(
-            attention_mask_func, self.init_method, 
+            attention_mask_func, self.init_method,
             output_layer_init_method)
         self._transformer_key = 'transformer'
 
