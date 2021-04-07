@@ -45,7 +45,6 @@ def get_exponent(t, epsilon):
     return (max_v + epsilon).log2().ceil()
 
 def _float_to_bfp(t, mant_bits, epsilon, rounding_mode, device, exp_given=None):
-    print(f"---bfp tester--- mant_bits: {mant_bits} device: {device}")
     """
     Convert float tensor t to bfp
     """
@@ -256,7 +255,6 @@ def F_linear_bfp(**kwargs):
 
     To be used in the model where F.linear is called
     """
-    print("---linear tester---")
     bfp_args = unpack_bfp_args(kwargs)
     if bfp_args['num_format'] == 'bfp':
         return _get_bfp_op(F.linear, 'linear', bfp_args)

@@ -46,5 +46,5 @@ python3 -m torch.distributed.launch $DISTRIBUTED_ARGS \
        --eval-interval 10 \
        --eval-iters 10 \
        --hbfp_num_format bfp \
-       --hbfp_mant_bits 2 \
+       --hbfp_mant_bits 7 \
        --hbfp_weight_mant_bits 15
