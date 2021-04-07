@@ -325,7 +325,7 @@ class TestCases(unittest.TestCase):
         """
         class HBFPRepresentables():
             def __init__(self, sign, mantissa, exponent):
-                self.sign = -1 if sign is "-" else 1
+                self.sign = -1 if sign == "-" else 1
                 self.exponent = exponent
                 self.bias = 2**(len(exponent)-1)
                 self.mantissa = "0" + mantissa
