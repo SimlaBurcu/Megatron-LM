@@ -45,6 +45,7 @@ def get_exponent(t, epsilon):
     return (max_v + epsilon).log2().ceil()
 
 def _float_to_bfp(t, mant_bits, epsilon, rounding_mode, device, exp_given=None):
+    print(f"---bfp tester--- mant_bits: {mant_bits} device: {device}")
     """
     Convert float tensor t to bfp
     """
@@ -231,15 +232,15 @@ def unpack_bfp_args(kwargs):
     Set up the bfp arguments
     """
     bfp_args = {}
+    device = torch.cuda.current_device()
     bfp_argn = [('num_format', 'fp32'),
                 ('rounding_mode', 'stoc'),
                 ('epsilon', 1e-8),
                 ('mant_bits', 0),
                 ('bfp_tile_size', 0),
                 ('weight_mant_bits', 0),
-                ('device', 'gpu')]
+                ('device', device)]
 
-    bfp_argn['device'] = torch.cuda.current_device()
     for arg, default in bfp_argn:
         if arg in kwargs:
             bfp_args[arg] = kwargs[arg]
@@ -255,6 +256,7 @@ def F_linear_bfp(**kwargs):
 
     To be used in the model where F.linear is called
     """
+    print("---linear tester---")
     bfp_args = unpack_bfp_args(kwargs)
     if bfp_args['num_format'] == 'bfp':
         return _get_bfp_op(F.linear, 'linear', bfp_args)
