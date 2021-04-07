@@ -17,7 +17,6 @@ def _gen_bfp_optim(optim, name):
             super().__init__(*args, **kwargs)
 
         def step(self, *args, **kwargs):
-            print("---optimizer tester---")
             if self.bfp_args['num_format'] == 'fp32':
                 return super().step(*args, **kwargs)
 
