@@ -237,7 +237,7 @@ def unpack_bfp_args(kwargs):
                 ('mant_bits', 0),
                 ('bfp_tile_size', 0),
                 ('weight_mant_bits', 0),
-                ('device', 'cpu')]
+                ('device', 'gpu')]
 
     for arg, default in bfp_argn:
         if arg in kwargs:
